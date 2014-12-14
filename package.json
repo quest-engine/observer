@@ -1,5 +1,5 @@
 {
-  "name": "observer",
+  "name": "quest-observer",
   "version": "0.0.1",
   "devDependencies": {
     "chai": "^1.10.0",
@@ -13,5 +13,38 @@
     "karma-mocha": "^0.1.9",
     "karma-phantomjs-launcher": "^0.1.4",
     "mocha": "^2.0.1"
-  }
+  },
+  "description": "Observer\r ========",
+  "main": "index.js",
+  "directories": {
+    "test": "test"
+  },
+  "dependencies": {
+    "gulp": "^3.8.10",
+    "chai": "^1.10.0",
+    "gulp-bump": "^0.1.11",
+    "gulp-header": "^1.2.2",
+    "gulp-karma": "^0.0.4",
+    "karma": "^0.12.28",
+    "gulp-uglify": "^1.0.1",
+    "karma-mocha": "^0.1.9",
+    "karma-chai": "^0.1.0",
+    "karma-phantomjs-launcher": "^0.1.4"
+  },
+  "scripts": {
+    "test": "karma start karma.conf.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/quest-engine/observer"
+  },
+  "keywords": [
+    "quest-engine"
+  ],
+  "author": "Pierre BEAUJEU <pierre.beaujeu@rednet.io> (https://github.com/Oza94)",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/quest-engine/observer/issues"
+  },
+  "homepage": "https://github.com/quest-engine/observer"
 }

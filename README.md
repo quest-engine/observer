@@ -64,7 +64,7 @@ obj.on("increment", increment);
 obj.emit("event");
 
 // prints "3"
-console.log(3);
+console.log(count);
 ```
 
 `emit` support parameters :

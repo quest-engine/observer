@@ -1,2 +1,2 @@
 
-require('./src/observer.js');
+module.exports = require('./src/observer');

@@ -3,7 +3,7 @@
   "use strict";
 
   // `window` in the browser or `global` on node
-  var root = window || global;
+  var root = typeof window !== 'undefined' ? window : global;
 
   var Observer = {},
     Observable = {};
@@ -77,7 +77,9 @@
   // detect requirejs and define module if defined. Else check for commonjs
   // and define a module if defined. If not in requirejs or commonjs, add
   // "Observer" to the global object
-  if (window && typeof require === "function" && typeof define === "function") {
+  if (typeof window !== 'undefined' && typeof require === "function" &&
+    typeof define === "function") {
+
     define("observer", [], function () {
       return Observer;
     });

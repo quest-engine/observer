@@ -169,4 +169,58 @@ describe("Observer", function () {
     });
 
   });
+
+  describe("#once", function () {
+    var obj;
+
+    beforeEach(function () {
+      obj = {};
+      Observer.make(obj);
+    });
+
+    it("should call a handler one time", function (done) {
+      var count = 0;
+
+      obj.once("event", function () {
+        count++;
+
+        if (count >= 2) {
+          throw Error("callback was called 2 times");
+        }
+      });
+
+      obj.emit("event");
+      obj.emit("event");
+
+      if (count === 1) {
+        done();
+      } else {
+        throw Error("count should equal 1");
+      }
+    });
+
+    it("should call a handler one time with parameters", function (done) {
+      var count = 0;
+
+      obj.once("event", function (a, b) {
+        count++;
+
+        expect(a).to.be.equal("hello");
+        expect(b).to.be.equal(123);
+
+        if (count >= 2) {
+          throw Error("callback was called 2 times");
+        }
+      });
+
+      obj.emit("event", "hello", 123);
+      obj.emit("event", "hello", 123);
+
+      if (count === 1) {
+        done();
+      } else {
+        throw Error("count should equal 1");
+      }
+    });
+  });
 });

@@ -49,6 +49,19 @@
     }
   };
 
+  // listen for an event, called only once
+  Observable.once = function (event, callback) {
+    var self = this, ptr;
+
+    ptr = this.on(event, function () {
+      var args = Array.prototype.slice.call(arguments);
+
+      self.clear(ptr);
+
+      callback.apply(null, args);
+    });
+  };
+
   // emit an events. `arguments` is used for event parameters
   Observable.emit = function (event) {
     var callbacks = this.__callbacks[event] || [],

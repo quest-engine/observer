@@ -80,7 +80,7 @@
   if (typeof window !== 'undefined' && typeof require === "function" &&
     typeof define === "function") {
 
-    define("observer", [], function () {
+    define([], function () {
       return Observer;
     });
   } else if (typeof module !== 'undefined' && module.exports) {

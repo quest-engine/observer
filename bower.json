@@ -1,0 +1,11 @@
+{
+  "name": "quest-observer",
+  "version": "0.0.3",
+  "main": "src/observer.json",
+  "ignore": [
+    "node_modules",
+    "test"
+  ],
+  "dependencies": {},
+  "devDependencies": {}
+}

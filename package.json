@@ -1,6 +1,6 @@
 {
   "name": "quest-observer",
-  "version": "0.0.4",
+  "version": "0.1.0",
   "devDependencies": {
     "chai": "^1.10.0",
     "gulp": "^3.8.10",

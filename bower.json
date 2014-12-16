@@ -1,6 +1,6 @@
 {
   "name": "quest-observer",
-  "version": "0.0.4",
+  "version": "0.1.0",
   "main": "src/observer.json",
   "ignore": [
     "node_modules",

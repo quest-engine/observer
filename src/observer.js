@@ -8,6 +8,37 @@
   var Observer = {},
     Observable = {};
 
+  // some shortcuts to call listeners
+  function callListeners(listeners) {
+    for (var i = 0; i < listeners.length; i += 1) {
+      listeners[i]();
+    }
+  }
+
+  function callListenersWith1Args(listeners, arg0) {
+    for (var i = 0; i < listeners.length; i += 1) {
+      listeners[i](arg0);
+    }
+  }
+
+  function callListenersWith2Args(listeners, arg0, arg1) {
+    for (var i = 0; i < listeners.length; i += 1) {
+      listeners[i](arg0, arg1);
+    }
+  }
+
+  function callListenersWith3Args(listeners, arg0, arg1, arg2) {
+    for (var i = 0; i < listeners.length; i += 1) {
+      listeners[i](arg0, arg1, arg2);
+    }
+  }
+
+  function callListenersWithFreeArgs(listeners, args) {
+    for (var i = 0; i < listeners.length; i += 1) {
+      listeners[i].apply(null, args);
+    }
+  }
+
   // make a object observable
   Observer.make = function (o, unsafe) {
     var p;
@@ -28,62 +59,92 @@
       }
     }
 
-    o.__callbacks = {};
+    o.__events = {};
   };
 
   // listen for an event
-  Observable.on = function (event, callback) {
-    if (typeof callback !== 'function') {
+  Observable.on = function (event, listener) {
+    if (typeof listener !== 'function') {
       return;
     }
 
-    if (!this.__callbacks[event]) {
-      this.__callbacks[event] = [];
+    if (!this.__events[event]) {
+      this.__events[event] = [];
     }
 
-    this.__callbacks[event].push(callback);
+    this.__events[event].push(listener);
+
+    var self = this;
 
     return {
-      event: event,
-      callback: callback
-    }
+      dispose: function () {
+        self.clear(event, listener);
+      }
+    };
   };
 
   // listen for an event, called only once
-  Observable.once = function (event, callback) {
+  Observable.once = function (event, listener) {
     var self = this, ptr;
 
     ptr = this.on(event, function () {
+      // no optimization here sincee it should be called once
+      // todo: optimise the way of passing arguments
       var args = Array.prototype.slice.call(arguments);
 
-      self.clear(ptr);
+      ptr.dispose();
 
-      callback.apply(null, args);
+      listener.apply(null, args);
     });
   };
 
-  // emit an events. `arguments` is used for event parameters
-  Observable.emit = function (event) {
-    var callbacks = this.__callbacks[event] || [],
-      args        = Array.prototype.slice.call(arguments);
+  // emit an events
+  Observable.emit = function (event, arg0, arg1, arg2) {
+    var listeners = this.__events[event];
 
-    args.splice(0, 1);
+    if (!listeners || !listeners.length) {
+      return;
+    }
 
-    for (var i = 0; i < callbacks.length; i += 1) {
-      callbacks[i].apply(null, args);
+    // if there is 3 or less aurgments, do not use apply to preserve 
+    // performances
+    if (arguments.length < 5) {
+      switch (arguments.length) {
+        case 1: callListeners(listeners); break;
+        case 2: 
+          callListenersWith1Args(listeners, arg0);
+          break;
+        case 3: 
+          callListenersWith2Args(listeners, arg0, arg1);
+          break;
+        case 4: 
+          callListenersWith3Args(listeners, arg0, arg1, arg2);
+          break;
+      }
+    } else {
+      // Optimization-efficient way to copy args
+      var args = new Array(arguments.length - 1);
+
+      for (var i = 1; i < args.length; ++i) {
+        args[i] = arguments[i];
+      } 
+
+      callListenersWithFreeArgs(listeners, args);
     }
   };
 
-  // clear an event with the `ptr` returned by `obj.on`
-  Observable.clear = function (ptr) {
-    var callbacks = this.__callbacks[ptr.event];
+  // clear an event listener
+  Observable.clear = function (event, listener) {
+    var listeners = this.__events[event];
 
-    for (var i = 0; i < callbacks.length; i += 1) {
-      if (callbacks[i] === ptr.callback) {
-        callbacks.splice(i, 1);
+    if (!listeners || !listeners.length) {
+      return;
+    }
 
-        return;
-      }
+    var index = listeners.indexOf(listener);
+
+    if (index !== -1) {
+      listeners.splice(index, 1);
     }
   };
 

@@ -12,7 +12,7 @@ describe("Observer", function () {
 
       Observer.make(obj);
 
-      expect(obj.__callbacks).to.be.an('object');
+      expect(obj.__events).to.be.an('object');
 
       expect(obj.on).to.be.a('function');
       expect(obj.emit).to.be.a('function');
@@ -131,7 +131,7 @@ describe("Observer", function () {
     it("should call the callback once", function (done) {
       var called = false;
 
-      var ptr = obj.on("event", function () {
+      var listener = function () {
 
         if (called) {
           throw Error("callback should not be called");
@@ -139,12 +139,14 @@ describe("Observer", function () {
 
         called = true;
 
-        obj.clear(ptr);
+        obj.clear("event", listener);
 
         obj.emit("event");
 
         done();
-      });
+      };
+
+      obj.on("event", listener);
 
       obj.emit("event");
     });

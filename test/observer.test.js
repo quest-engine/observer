@@ -170,6 +170,28 @@ describe("Observer", function () {
       obj.emit("event");
     });
 
+    it("should call multiple once() callbacks", function (done) {
+      var count = 0;
+
+      function eventHandler() {
+        count++;
+
+        if (count >= 3) {
+          throw Error("callback was called 3 times");
+        }
+      }
+
+      obj.once("event", eventHandler);
+      obj.once("event", eventHandler);
+
+      obj.emit("event");
+
+      if (count === 2) {
+        done();
+      } else {
+        throw Error("count should equal 2");
+      }
+    });
   });
 
   describe("#once", function () {

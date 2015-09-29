@@ -10,32 +10,68 @@
 
   // some shortcuts to call listeners
   function callListeners(listeners) {
-    for (var i = 0; i < listeners.length; i += 1) {
+    var cachedLength = listeners.length;
+
+    for (var i = 0; i < cachedLength; i += 1) {
       listeners[i]();
+
+      // handle calls to dispose()
+      if (listeners.length < cachedLength) {
+        i -= 1;
+        cachedLength = listeners.length;
+      }
     }
   }
 
   function callListenersWith1Args(listeners, arg0) {
-    for (var i = 0; i < listeners.length; i += 1) {
+    var cachedLength = listeners.length;
+
+    for (var i = 0; i < cachedLength; i += 1) {
       listeners[i](arg0);
+
+      if (listeners.length < cachedLength) {
+        i -= 1;
+        cachedLength = listeners.length;
+      }
     }
   }
 
   function callListenersWith2Args(listeners, arg0, arg1) {
-    for (var i = 0; i < listeners.length; i += 1) {
+    var cachedLength = listeners.length;
+
+    for (var i = 0; i < cachedLength; i += 1) {
       listeners[i](arg0, arg1);
+
+      if (listeners.length < cachedLength) {
+        i -= 1;
+        cachedLength = listeners.length;
+      }
     }
   }
 
   function callListenersWith3Args(listeners, arg0, arg1, arg2) {
-    for (var i = 0; i < listeners.length; i += 1) {
+    var cachedLength = listeners.length;
+
+    for (var i = 0; i < cachedLength; i += 1) {
       listeners[i](arg0, arg1, arg2);
+
+      if (listeners.length < cachedLength) {
+        i -= 1;
+        cachedLength = listeners.length;
+      }
     }
   }
 
   function callListenersWithFreeArgs(listeners, args) {
-    for (var i = 0; i < listeners.length; i += 1) {
+    var cachedLength = listeners.length;
+
+    for (var i = 0; i < cachedLength; i += 1) {
       listeners[i].apply(null, args);
+
+      if (listeners.length < cachedLength) {
+        i -= 1;
+        cachedLength = listeners.length;
+      }
     }
   }
 
@@ -83,6 +119,12 @@
     };
   };
 
+  function disposeObserverHandler(listener, ptr) {
+    return function () {
+      console.log(this);
+    };
+  }
+
   // listen for an event, called only once
   Observable.once = function (event, listener) {
     var self = this, ptr;
@@ -105,6 +147,7 @@
     if (!listeners || !listeners.length) {
       return;
     }
+    console.log(listeners.length);
 
     // if there is 3 or less aurgments, do not use apply to preserve 
     // performances

@@ -119,12 +119,6 @@
     };
   };
 
-  function disposeObserverHandler(listener, ptr) {
-    return function () {
-      console.log(this);
-    };
-  }
-
   // listen for an event, called only once
   Observable.once = function (event, listener) {
     var self = this, ptr;
@@ -147,7 +141,6 @@
     if (!listeners || !listeners.length) {
       return;
     }
-    console.log(listeners.length);
 
     // if there is 3 or less aurgments, do not use apply to preserve 
     // performances
